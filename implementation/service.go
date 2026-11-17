@@ -52,3 +52,8 @@ func (s *service) MarkSold(ctx context.Context, id string) error {
 	}
 	return nil
 }
+
+// intentionallyBroken добавлена для демонстрации работы линтера
+func intentionallyBroken() {
+	unusedVariable := 42
+}
