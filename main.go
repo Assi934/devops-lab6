@@ -9,8 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -38,8 +38,8 @@ func main() {
 			"caller", log.DefaultCaller,
 		)
 	}
-	level.Info(logger).Log("msg", "service started")
-	defer level.Info(logger).Log("msg", "service ended")
+	_ = level.Info(logger).Log("msg", "service started")
+	defer func() { _ = level.Info(logger).Log("msg", "service ended") }()
 
 	repo := repository.NewMemoryRepository()
 	svc := implementation.NewService(repo, logger)
@@ -56,7 +56,7 @@ func main() {
 	// HTTP-транспорт на :8080
 	go func() {
 		handler := servicehttp.NewService(endpoints, logger)
-		logger.Log("transport", "HTTP", "addr", *httpAddr)
+		_ = logger.Log("transport", "HTTP", "addr", *httpAddr)
 		server := &http.Server{
 			Addr:    *httpAddr,
 			Handler: handler,
@@ -74,9 +74,9 @@ func main() {
 		server := grpc.NewServer()
 		pb.RegisterCarServiceServer(server, grpcserver.NewGRPCServer(endpoints, logger))
 		reflection.Register(server)
-		logger.Log("transport", "gRPC", "addr", *grpcAddr)
+		_ = logger.Log("transport", "gRPC", "addr", *grpcAddr)
 		errs <- server.Serve(listener)
 	}()
 
-	level.Error(logger).Log("exit", <-errs)
+	_ = level.Error(logger).Log("exit", <-errs)
 }

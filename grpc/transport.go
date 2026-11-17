@@ -6,7 +6,7 @@ import (
 	"example.com/car-service/car"
 	"example.com/car-service/transport"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	kitgrpc "github.com/go-kit/kit/transport/grpc"
 
 	pb "example.com/car-service/pb"
